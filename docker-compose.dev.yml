@@ -18,6 +18,12 @@ services:
       - .:/usr/src/habitica
       - /usr/src/habitica/node_modules
       - /usr/src/habitica/website/client/node_modules
+    healthcheck:
+      test: curl --fail http://localhost:8080 || exit 1
+      # test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 60s
+      retries: 5
+      timeout: 10s
   server:
     build:
       context: .
@@ -35,6 +41,11 @@ services:
     volumes:
       - .:/usr/src/habitica
       - /usr/src/habitica/node_modules
+    healthcheck:
+      test: curl --fail http://localhost:3000 || exit 1
+      interval: 60s
+      retries: 5
+      timeout: 10s
   mongo:
     image: mongo:3.6
     networks:
