@@ -1,8 +1,9 @@
 name: Test
 
 on:
-  pull_request:
-    types: [ opened, synchronize, reopened ]
+  push:
+    branches:
+      - CYOM_FinalProject
 
 jobs:
   sonar-coverage:
