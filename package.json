@@ -98,7 +98,7 @@
     "test:common": "istanbul cover --dir coverage/common --report lcovonly node_modules/mocha/bin/_mocha -- test/common --recursive",
     "test:content": "istanbul cover --dir coverage/content --report lcovonly node_modules/mocha/bin/_mocha -- test/content --recursive",
     "test:nodemon": "gulp test:nodemon",
-    "coverage": "COVERAGE=true mocha --require register-handlers.js --reporter html-cov > coverage.html; open coverage.html",
+    "coverage": "nyc --reporter=text-lcov npm test",
     "sprites": "gulp sprites:compile",
     "client:dev": "cd website/client && npm run serve",
     "client:build": "cd website/client && npm run build",
@@ -121,7 +121,7 @@
     "mocha": "^5.1.1",
     "monk": "^7.3.4",
     "require-again": "^2.0.0",
-    "run-rs": "^0.7.6",
+    "run-rs": "^0.7.7",
     "sinon": "^13.0.2",
     "sinon-chai": "^3.7.0",
     "sinon-stub-promise": "^4.0.0"
