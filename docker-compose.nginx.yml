@@ -1,0 +1,16 @@
+version: '3'
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - nginx_data:/var/lib/nginx
+      - /Users/shri/Documents/Harrisburg/Courses/SEM II/CYOM-569/FinalProject/habitica/nginx-conf.d:/etc/nginx/conf.d
+    ports:
+      - '3030:80'
+    networks:
+      - habitica
+networks:
+  habitica:
+    driver: bridge
+volumes:
+  nginx_data: {}
