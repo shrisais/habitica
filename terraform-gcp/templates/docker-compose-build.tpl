@@ -35,6 +35,18 @@ services:
       interval: 60s
       retries: 5
       timeout: 10s
+  prometheus:
+    image: shrisais5/habitica-prom:latest
+    ports:
+      - '9090:9090'
+  grafana:
+    image: shrisais5/habitica-graf:latest
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=simp1e
+    depends_on:
+      - prometheus
+    ports:
+      - '9095:9095'
   mongo:
     image: mongo:3.6
     ports:

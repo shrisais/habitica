@@ -9,8 +9,7 @@ resource "google_compute_instance" "default" {
  name         = "gcp-cloud-${random_id.instance_id.hex}"
  machine_type = "n1-standard-1"
  zone         = "${var.gcp_region}"
-
-# tags = ["http-server","https-server"] #uncomment to allow 80 and or 443
+ tags         = ["http"]
 
  boot_disk {
    initialize_params {
