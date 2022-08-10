@@ -29,6 +29,8 @@ jobs:
         CI: true
         NODE_ENV: test
     - run: npm run test:common
+    - run: |
+        sed -i -e "s,/home/runner/work/habitica/habitica/,/habitica/,g" lcov.info
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master
       env:
