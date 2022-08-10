@@ -1,0 +1,84 @@
+services:
+  # first, we define the three mongo servers that will act as replicas
+  # here, we steup the hostname ports, and startup command
+  # which is the same as discussed in the previous section
+  mongo1:
+    hostname: mongo1
+    image: mongo
+    networks:
+      - habitica
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    restart: always
+    command: ["mongod", "--replSet", "rs0" ]
+  mongo2:
+    hostname: mongo2
+    image: mongo
+    networks:
+      - habitica
+    expose:
+      - 27017
+    ports:
+      - 27018:27017
+    restart: always
+    command: ["mongod", "--replSet", "rs0" ]
+  mongo3:
+    hostname: mongo3
+    image: mongo
+    networks:
+      - habitica
+    expose:
+      - 27017
+    ports:
+      - 27019:27017
+    restart: always
+    command: ["mongod", "--replSet", "rs0" ]
+
+  # finally, we can define the initialization server
+  # this runs the `rs.initiate` command to intialize
+  # the replica set and connect the three servers to each other
+  mongoinit:
+    image: mongo
+    # this container will exit after executing the command
+    restart: "no"
+    networks:
+      - habitica
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    command: >
+      mongo --host mongo1:27017 --eval
+      '
+      db = (new Mongo("mongo1:27017")).getDB("test");
+      config={"_id":"rs0","members":[{"_id":0,"host":"mongo1:27017"},{"_id":1,"host":"mongo2:27017"},{"_id":2,"host":"mongo3:27017"}]};
+      rs.initiate(config);
+      '
+  client:
+    command: ["npm", "run", "client:dev"]
+    depends_on:
+      - server
+    environment:
+      - BASE_URL=http://server:3000
+    image: shrisais5/habitica-base
+    networks:
+      - habitica
+    ports:
+      - "8080:8080"
+  server:
+    command: ["npm", "start"]
+    depends_on:
+      - mongoinit
+    environment:
+      - NODE_DB_URI=mongodb://mongo1,mongo2,mongo3/habitrpg?replicaSet=rs0
+    image: shrisais5/habitica-base
+    networks:
+      - habitica
+    ports:
+      - "3000:3000"
+
+networks:
+  habitica:
+    driver: bridge
