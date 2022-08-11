@@ -1,0 +1,14 @@
+version: '3'
+services:
+  client-green:
+    command: ["npm", "run", "client:dev"]
+    environment:
+      - BASE_URL=http://server:3000
+    image: shrisais5/habitica-green
+    networks:
+      - habitica
+    ports:
+      - "8081:8080"
+networks:
+  habitica:
+    driver: bridge
